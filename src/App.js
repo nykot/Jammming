@@ -43,14 +43,21 @@ function App() {
     setPlaylistTracks([...playlistTracks, track]);
   }
 
-  
+  function RemoveTrack(track) {
+    const updatePlaylist = playlistTracks.filter((t) => t.id !== track.id);
+    setPlaylistTracks(updatePlaylist);
+  }
 
   return (
     <div className="App">
       <header className="App-header"></header>
       <div className="App-content">
         <SearchResults tracks={searchResults} onAdd={addNewTrack} />
-        <Playlist tracks={playlistTracks} name={playlistName} />
+        <Playlist
+          tracks={playlistTracks}
+          name={playlistName}
+          onRemove={RemoveTrack}
+        />
       </div>
     </div>
   );
