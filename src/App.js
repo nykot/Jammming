@@ -22,7 +22,7 @@ console.log(renderTrack);
 const newPlaylist = {
   playlistName: "My Playlist",
   playlistTracks: [
-    { id: "1", name: "Song 1", artist: "Artist 1", album: "Album 1" },
+    { id: "1", name: "Song 1", artist: "Artist 1", album: "Album 1", uri: "" },
     { id: "2", name: "Song 2", artist: "Artist 2", album: "Album 2" },
   ],
 };
@@ -52,7 +52,9 @@ function App() {
     setPlaylistName(event.target.value);
   }
 
-  console.log({ playlistName });
+  function savePlaylist() {
+    console.log("save playlist", { playlistName, playlistTracks });
+  }
 
   return (
     <div className="App">
@@ -64,6 +66,7 @@ function App() {
           name={playlistName}
           onRemove={removeTrack}
           onNameChange={updatePlaylistName}
+          onSave={savePlaylist}
         />
       </div>
     </div>
