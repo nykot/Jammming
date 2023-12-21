@@ -3,7 +3,10 @@ import Track from "./Components/Track/Track";
 import Playlist from "./Components/Playlist/Playlist";
 import TrackList from "./Components/Tracklist/Tracklist";
 import SearchResults from "./Components/SearchResults/SearchResults";
-import { useState } from "react";
+import { combineAuthorizeUrl } from "./Utils/api";
+import { verifyAuthorisation } from "./Utils/auth";
+import { useEffect, useState } from "react";
+import SearchBar from "./Components/SearchBar/SearchBar";
 
 const SEARCH_RESULTS = [
   { id: "1", name: "Song 1", artist: "Artist 1", album: "Album 1" },
@@ -27,13 +30,23 @@ const newPlaylist = {
   ],
 };
 
-console.log({ Playlist });
-
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState(SEARCH_RESULTS);
   const [playlistName, setPlaylistName] = useState("default name");
   const [playlistTracks, setPlaylistTracks] = useState([]);
+
+  useEffect(() => {
+    verifyAuthorisation();
+  }, []);
+
+  function onSearchQueryChange(event) {
+    setSearchQuery(event.target.value);
+  }
+
+  function searchSpotify() {
+    console.log(searchQuery);
+  }
 
   function addNewTrack(track) {
     if (playlistTracks.find((t) => t.id === track.id)) {
@@ -59,6 +72,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header"></header>
+      <div className="App-search">
+        <SearchBar
+          searchSpotify={searchSpotify}
+          searchQuery={searchQuery}
+          onSearchQueryChange={onSearchQueryChange}
+        />
+      </div>
       <div className="App-content">
         <SearchResults tracks={searchResults} onAdd={addNewTrack} />
         <Playlist
