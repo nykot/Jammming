@@ -44,6 +44,18 @@ export async function searchForTracks(query) {
   }));
 }
 
+export async function getUserData() {
+  let accessToken = retriveFromStorage();
+
+  const response = await fetch("https://api.spotify.com/v1/me", {
+    headers: {
+      Authorization: "Bearer " + accessToken,
+    },
+  });
+
+  return await response.json();
+}
+
 export function combineAuthorizeUrl() {
   const state = generateRandomString(16);
   const scope = "user-read-private user-read-email";

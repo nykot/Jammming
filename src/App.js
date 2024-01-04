@@ -20,7 +20,6 @@ const renderTrack = SEARCH_RESULTS.map(({ id, name, artist, album }) => ({
   album,
   id,
 }));
-console.log(renderTrack);
 
 const newPlaylist = {
   playlistName: "My Playlist",
@@ -35,9 +34,12 @@ function App() {
   const [searchResults, setSearchResults] = useState(SEARCH_RESULTS);
   const [playlistName, setPlaylistName] = useState("default name");
   const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [user, setUser] = useState();
 
   useEffect(() => {
-    verifyAuthorisation();
+    verifyAuthorisation().then((userData) => {
+      setUser(userData);
+    });
   }, []);
 
   function onSearchQueryChange(event) {

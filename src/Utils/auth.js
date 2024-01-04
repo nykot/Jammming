@@ -1,10 +1,10 @@
 import queryString from "querystring";
 
-import { combineAuthorizeUrl } from "./api";
+import { combineAuthorizeUrl, getUserData } from "./api";
 
 const TOKEN_KEY = "thisToken";
 
-export function verifyAuthorisation() {
+export async function verifyAuthorisation() {
   const urlToken = retriveTokenFromUrl();
 
   if (!!urlToken) {
@@ -17,9 +17,14 @@ export function verifyAuthorisation() {
   const storageToken = retriveFromStorage();
 
   if (!!storageToken) {
-    // profit
+    const data = await getUserData();
 
-    return;
+    if (!!data.error) {
+      removeToken();
+      window.location.reload();
+    }
+
+    return data;
   }
 
   window.location = combineAuthorizeUrl();
@@ -33,6 +38,10 @@ function retriveTokenFromUrl() {
 
 function saveToken(token) {
   localStorage.setItem(TOKEN_KEY, token);
+}
+
+function removeToken() {
+  localStorage.removeItem(TOKEN_KEY);
 }
 
 export function retriveFromStorage() {
