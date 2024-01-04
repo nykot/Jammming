@@ -3,7 +3,6 @@ import "./SearchBar.css";
 
 function SearchBar({ searchSpotify, searchQuery, onSearchQueryChange }) {
   // const { searchSpotify } = props;
-  console.log(searchQuery);
 
   return (
     <div className="SearchBar">

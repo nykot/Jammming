@@ -1,5 +1,7 @@
 import querystring from "querystring";
 
+import { retriveFromStorage } from "./auth";
+
 const client_id = "de85126d7c3e446b946349f420e369ab";
 const redirect_uri = "http://localhost:3000/callback";
 
@@ -18,6 +20,29 @@ const generateRandomString = function (length) {
   }
   return text;
 };
+
+export async function searchForTracks(query) {
+  let accessToken = retriveFromStorage();
+
+  const response = await fetch(
+    "https://api.spotify.com/v1/search?q=" + query + "&type=track",
+    {
+      headers: {
+        Authorization: "Bearer " + accessToken,
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  return data.tracks.items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    album: item.album.name,
+    artist: item.artists[0].name,
+    uri: item.uri,
+  }));
+}
 
 export function combineAuthorizeUrl() {
   const state = generateRandomString(16);

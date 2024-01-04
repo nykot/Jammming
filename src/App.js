@@ -3,8 +3,8 @@ import Track from "./Components/Track/Track";
 import Playlist from "./Components/Playlist/Playlist";
 import TrackList from "./Components/Tracklist/Tracklist";
 import SearchResults from "./Components/SearchResults/SearchResults";
-import { combineAuthorizeUrl } from "./Utils/api";
-import { verifyAuthorisation } from "./Utils/auth";
+import { searchForTracks } from "./Utils/api";
+import { verifyAuthorisation, retriveFromStorage } from "./Utils/auth";
 import { useEffect, useState } from "react";
 import SearchBar from "./Components/SearchBar/SearchBar";
 
@@ -44,8 +44,10 @@ function App() {
     setSearchQuery(event.target.value);
   }
 
-  function searchSpotify() {
-    console.log(searchQuery);
+  async function searchSpotify() {
+    const result = await searchForTracks(searchQuery);
+    console.log(result);
+    setSearchResults(result);
   }
 
   function addNewTrack(track) {
