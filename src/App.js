@@ -3,7 +3,7 @@ import Track from "./Components/Track/Track";
 import Playlist from "./Components/Playlist/Playlist";
 import TrackList from "./Components/Tracklist/Tracklist";
 import SearchResults from "./Components/SearchResults/SearchResults";
-import { searchForTracks } from "./Utils/api";
+import { searchForTracks, savePlaylistToSpotify } from "./Utils/api";
 import { verifyAuthorisation, retriveFromStorage } from "./Utils/auth";
 import { useEffect, useState } from "react";
 import SearchBar from "./Components/SearchBar/SearchBar";
@@ -31,7 +31,7 @@ const newPlaylist = {
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState(SEARCH_RESULTS);
+  const [searchResults, setSearchResults] = useState([]);
   const [playlistName, setPlaylistName] = useState("default name");
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [user, setUser] = useState();
@@ -69,8 +69,8 @@ function App() {
     setPlaylistName(event.target.value);
   }
 
-  function savePlaylist() {
-    console.log("save playlist", { playlistName, playlistTracks });
+  async function savePlaylist() {
+    savePlaylistToSpotify(user, playlistName, playlistTracks);
   }
 
   return (

@@ -58,7 +58,8 @@ export async function getUserData() {
 
 export function combineAuthorizeUrl() {
   const state = generateRandomString(16);
-  const scope = "user-read-private user-read-email";
+  const scope =
+    "user-read-private user-read-email playlist-modify-private playlist-read-private";
 
   return (
     "https://accounts.spotify.com/authorize?" +
@@ -69,5 +70,56 @@ export function combineAuthorizeUrl() {
       redirect_uri: redirect_uri,
       state: state,
     })
+  );
+}
+
+export async function savePlaylistToSpotify(
+  userData,
+  playlistName,
+  playlistTracks
+) {
+  const playlistID = await createPlaylist(userData, playlistName);
+  await updatePlaylist(playlistID, playlistTracks);
+}
+
+async function createPlaylist(user, playlistName) {
+  let accessToken = retriveFromStorage();
+
+  const response = await fetch(
+    "https://api.spotify.com/v1/users/" + user.id + "/playlists",
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+      },
+      method: "POST",
+      body: JSON.stringify({
+        name: playlistName,
+        description: "Created with React app",
+        public: false,
+      }),
+    }
+  );
+
+  const data = await response.json();
+
+  return data.id;
+}
+
+async function updatePlaylist(playlistID, playlistTracks) {
+  let accessToken = retriveFromStorage();
+
+  const response = await fetch(
+    "https://api.spotify.com/v1/playlists/" + playlistID + "/tracks",
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
+      },
+      method: "PUT",
+      body: JSON.stringify({
+        uris: playlistTracks.map((track) => "spotify:track:" + track.id),
+      }),
+    }
   );
 }
